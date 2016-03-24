@@ -1,0 +1,440 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="main">
+    <div class="body container">
+        <div class="typecho-page-title">
+            <h2>管理评论</h2>
+        </div>
+        <div class="row typecho-page-main" role="main">
+            <div class="col-mb-12 typecho-list">
+                <div class="clearfix">
+                    <ul class="typecho-option-tabs right">
+                        <li class=""><a href="/admin/manage-comments?__typecho_all_comments=on">所有</a></li>
+                        <li class=" current"><a href="/admin/manage-comments?__typecho_all_comments=off">我的</a></li>
+                    </ul>
+                    <ul class="typecho-option-tabs">
+                        <li {% if status == 'approved' %} class="current" {% endif %}><a href="/admin/manage-comments">已通过</a></li>
+                        <li {% if status =='waiting' %} class="current" {% endif %}><a href="/admin/manage-comments?status=waiting">待审核 </a></li>
+                        <li {% if status == 'spam' %} class="current" {% endif %}><a href="/admin/manage-comments?status=spam">垃圾 </a></li>
+                    </ul>
+                </div>
+                <div class="typecho-list-operate clearfix">
+                    <form method="get">
+                        <div class="operate">
+                            <label><i class="sr-only">全选</i><input type="checkbox" class="typecho-table-select-all"/></label>
+                            <div class="btn-group btn-drop">
+                                <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only">操作</i>选中项 <i
+                                        class="i-caret-down"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="/admin/comments-edit?do=approved">通过</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/comments-edit?do=waiting">待审核</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/comments-edit?do=spam">标记垃圾</a>
+                                    </li>
+                                    <li><a lang="你确认要删除这些评论吗?"
+                                           href="/admin/comments-edit?do=delete">删除</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="search" role="search">
+                            <input type="text" class="text-s" placeholder="请输入关键字" value=""
+                                   onclick="value='';name='keywords';"/>
+                            <button type="submit" class="btn btn-s">筛选</button>
+                        </div>
+                    </form>
+                </div>
+                <form method="post" name="manage_comments" class="operate-form">
+                    <div class="typecho-table-wrap">
+                        <table class="typecho-list-table">
+                            <colgroup>
+                                <col width="3%"/>
+                                <col width="6%"/>
+                                <col width="20%"/>
+                                <col width="71%"/>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>作者</th>
+                                <th></th>
+                                <th>内容</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if !comments %}
+                            <tr>
+                                <td colspan="4">
+                                    <h6 class="typecho-list-table-title">没有任何评论</h6>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% if comments %}
+                            {% for comment in comments %}
+                            <tr id="comment-{{comment.id}}"
+                                data-comment="{&quot;author&quot;:&quot;java\u5c0f\u6c99\u5f25&quot;,&quot;mail&quot;:&quot;zyh198912@163.com&quot;,&quot;url&quot;:&quot;http:\/\/www.typecho.org&quot;,&quot;ip&quot;:&quot;127.0.0.1&quot;,&quot;type&quot;:&quot;comment&quot;,&quot;text&quot;:&quot;12132&quot;}">
+                                <td valign="top">
+                                    <input type="checkbox" value="{{ comment.id}}" name="cmtIds"/>
+                                </td>
+                                <td valign="top">
+                                    <div class="comment-avatar">
+                                        <img class="avatar" src="/gravatars/avarta.jpg" alt="java小沙弥" width="40" height="40"/>
+                                    </div>
+                                </td>
+                                <td valign="top" class="comment-head">
+                                    <div class="comment-meta">
+                                        <strong class="comment-author"><a href="http://www.typecho.org" rel="external nofollow">{{comment.authorName}}</a></strong>
+                                        <br/><span><a href="mailto:{{comment.mail}}">{{comment.mail}}</a></span>
+                                        <br/><span>{{comment.ip}}</span>
+                                    </div>
+                                </td>
+                                <td valign="top" class="comment-body">
+                                    <div class="comment-date">3月14日 于 <a href="/posts/{{comment.postId}}.html#comment-44">java
+                                        信号量-Semaphore</a></div>
+                                    <div class="comment-content">
+                                        <p>12132</p>
+                                    </div>
+                                    <div class="comment-action hidden-by-mouse">
+                                        <span class="weak">通过</span>
+                                        <a href="/admin/comments-edit?do=waiting&cmtIds={{comment.id}}"
+                                           class="operate-waiting">待审核</a>
+
+                                        <a href="/admin/comments-edit?do=spam&cmtIds={{comment.id}}"
+                                           class="operate-spam">垃圾</a>
+
+                                        <a href="#comment-44"
+                                           rel="/admin/comments-edit?do=edit&cmtIds={{comment.id}}"
+                                           class="operate-edit">编辑</a>
+
+                                        <a href="#comment-44"
+                                           rel="/admin/comments-edit?do=reply&cmtIds={{comment.id}}"
+                                           class="operate-reply">回复</a>
+
+                                        <a lang="你确认要删除java小沙弥的评论吗?"
+                                           href="/admin/comments-edit?do=delete&cmtIds={{comment.id}}"
+                                           class="operate-delete">删除</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                                </tbody>
+                            </table>
+                    </div>
+                </form>
+                <div class="typecho-list-operate clearfix">
+                    <form method="get">
+                        <div class="operate">
+                            <label><i class="sr-only">全选</i><input type="checkbox"
+                                                                   class="typecho-table-select-all"/></label>
+                            <div class="btn-group btn-drop">
+                                <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only">操作</i>选中项 <i
+                                        class="i-caret-down"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="/admin/comments-edit?do=approved">通过</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/comments-edit?do=waiting">待审核</a>
+                                    </li>
+                                    <li>
+                                        <a href="/admin/comments-edit?do=spam">标记垃圾</a>
+                                    </li>
+                                    <li><a lang="你确认要删除这些评论吗?"
+                                           href="/admin/comments-edit?do=delete">删除</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <ul class="typecho-pager">
+                            {% if hasPre %}
+                            <li> <a class="next" href="/admin/manage-comments?page={{ crtPage - 1 }}">上一页</a></li>
+                            {% endif %}
+                            {% if hasNext %}
+                                <li> <a class="next" href="/admin/manage-comments?page={{crtPage + 1}}">下一页</a></li>
+                            {% endif %}
+                        </ul>
+                    </form>
+                </div><!-- end .typecho-list-operate -->
+            </div><!-- end .typecho-list -->
+        </div><!-- end .typecho-page-main -->
+    </div>
+</div>
+{% endblock %}
+
+{% block jsBlock %}
+<script>
+    (function () {
+        $(document).ready(function () {
+            // 处理消息机制
+            (function () {
+                var prefix = '716f68e4233725c4cc57cf549cb1cee0',
+                        cookies = {
+                            notice: $.cookie(prefix + '__typecho_notice'),
+                            noticeType: $.cookie(prefix + '__typecho_notice_type'),
+                            highlight: $.cookie(prefix + '__typecho_notice_highlight')
+                        },
+                        path = '/';
+
+                if (!!cookies.notice && 'success|notice|error'.indexOf(cookies.noticeType) >= 0) {
+                    var head = $('.typecho-head-nav'),
+                            p = $('<div class="message popup ' + cookies.noticeType + '">'
+                                    + '<ul><li>' + $.parseJSON(cookies.notice).join('</li><li>')
+                                    + '</li></ul></div>'), offset = 0;
+
+                    if (head.length > 0) {
+                        p.insertAfter(head);
+                        offset = head.outerHeight();
+                    } else {
+                        p.prependTo(document.body);
+                    }
+
+                    function checkScroll() {
+                        if ($(window).scrollTop() >= offset) {
+                            p.css({
+                                'position': 'fixed',
+                                'top': 0
+                            });
+                        } else {
+                            p.css({
+                                'position': 'absolute',
+                                'top': offset
+                            });
+                        }
+                    }
+
+                    $(window).scroll(function () {
+                        checkScroll();
+                    });
+
+                    checkScroll();
+
+                    p.slideDown(function () {
+                        var t = $(this), color = '#C6D880';
+
+                        if (t.hasClass('error')) {
+                            color = '#FBC2C4';
+                        } else if (t.hasClass('notice')) {
+                            color = '#FFD324';
+                        }
+
+                        t.effect('highlight', {color: color})
+                                .delay(5000).slideUp(function () {
+                            $(this).remove();
+                        });
+                    });
+
+
+                    $.cookie(prefix + '__typecho_notice', null, {path: path});
+                    $.cookie(prefix + '__typecho_notice_type', null, {path: path});
+                }
+
+                if (cookies.highlight) {
+                    $('#' + cookies.highlight).effect('highlight', 1000);
+                    $.cookie(prefix + '__typecho_notice_highlight', null, {path: path});
+                }
+            })();
+
+
+            // 导航菜单 tab 聚焦时展开下拉菜单
+            (function () {
+                $('#typecho-nav-list').find('.parent a').focus(function () {
+                    $('#typecho-nav-list').find('.child').hide();
+                    $(this).parents('.root').find('.child').show();
+                });
+                $('.operate').find('a').focus(function () {
+                    $('#typecho-nav-list').find('.child').hide();
+                });
+            })();
+
+
+            if ($('.typecho-login').length == 0) {
+                $('a').each(function () {
+                    var t = $(this), href = t.attr('href');
+
+                    if ((href && href[0] == '#')
+                            || /^http\:\/\/www\.leokong\.com\/admin\/.*$/.exec(href)
+                            || /^http\:\/\/www\.leokong\.com\/index\\/action\/[_a-zA-Z0-9\/]+.*$/.exec(href)
+                    )
+                    {
+                        return;
+                    }
+
+                    t.attr('target', '_blank');
+                });
+            }
+        });
+    })();
+</script>
+<script>
+    (function () {
+        $(document).ready(function () {
+            $('.typecho-list-table').tableSelectable({
+                checkEl: 'input[type=checkbox]',
+                rowEl: 'tr',
+                selectAllEl: '.typecho-table-select-all',
+                actionEl: '.dropdown-menu a,button.btn-operate'
+            });
+
+            $('.btn-drop').dropdownMenu({
+                btnEl: '.dropdown-toggle',
+                menuEl: '.dropdown-menu'
+            });
+        });
+    })();
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // 记住滚动条
+        function rememberScroll() {
+            $(window).bind('beforeunload', function () {
+                $.cookie('__typecho_comments_scroll', $('body').scrollTop());
+            });
+        }
+
+        // 自动滚动
+        (function () {
+            var scroll = $.cookie('__typecho_comments_scroll');
+
+            if (scroll) {
+                $.cookie('__typecho_comments_scroll', null);
+                $('html, body').scrollTop(scroll);
+            }
+        })();
+
+        $('.operate-delete').click(function () {
+            var t = $(this), href = t.attr('href'), tr = t.parents('tr');
+
+            if (confirm(t.attr('lang'))) {
+                tr.fadeOut(function () {
+                    rememberScroll();
+                    window.location.href = href;
+                });
+            }
+
+            return false;
+        });
+
+        $('.operate-approved, .operate-waiting, .operate-spam').click(function () {
+            rememberScroll();
+            window.location.href = $(this).attr('href');
+            return false;
+        });
+
+        $('.operate-reply').click(function () {
+            var td = $(this).parents('td'), t = $(this);
+
+            if ($('.comment-reply', td).length > 0) {
+                $('.comment-reply').remove();
+            } else {
+                var form = $('<form method="post" action="'
+                        + t.attr('rel') + '" class="comment-reply">'
+                        + '<p><label for="text" class="sr-only">内容</label><textarea id="text" name="text" class="w-90 mono" rows="3"></textarea></p>'
+                        + '<p><button type="submit" class="btn btn-s primary">回复</button> <button type="button" class="btn btn-s cancel">取消</button></p>'
+                        + '</form>').insertBefore($('.comment-action', td));
+
+                $('.cancel', form).click(function () {
+                    $(this).parents('.comment-reply').remove();
+                });
+
+                var textarea = $('textarea', form).focus();
+
+                form.submit(function () {
+                    var t = $(this), tr = t.parents('tr'),
+                            reply = $('<div class="comment-reply-content"></div>').insertAfter($('.comment-content', tr));
+
+                    reply.html('<p>' + textarea.val() + '</p>');
+                    $.post(t.attr('action'), t.serialize(), function (o) {
+                        reply.html(o.comment.content)
+                                .effect('highlight');
+                    }, 'json');
+
+                    t.remove();
+                    return false;
+                });
+            }
+
+            return false;
+        });
+
+        $('.operate-edit').click(function () {
+            var tr = $(this).parents('tr'), t = $(this), id = tr.attr('id'), comment = tr.data('comment');
+            tr.hide();
+
+            var edit = $('<tr class="comment-edit"><td> </td>'
+                    + '<td colspan="2" valign="top"><form method="post" action="'
+                    + t.attr('rel') + '" class="comment-edit-info">'
+                    + '<p><label for="' + id + '-author">用户名</label><input class="text-s w-100" id="'
+                    + id + '-author" name="author" type="text"></p>'
+                    + '<p><label for="' + id + '-mail">电子邮箱</label>'
+                    + '<input class="text-s w-100" type="email" name="mail" id="' + id + '-mail"></p>'
+                    + '<p><label for="' + id + '-url">个人主页</label>'
+                    + '<input class="text-s w-100" type="text" name="url" id="' + id + '-url"></p></form></td>'
+                    + '<td valign="top"><form method="post" action="'
+                    + t.attr('rel') + '" class="comment-edit-content"><p><label for="' + id + '-text">内容</label>'
+                    + '<textarea name="text" id="' + id + '-text" rows="6" class="w-90 mono"></textarea></p>'
+                    + '<p><button type="submit" class="btn btn-s primary">提交</button> '
+                    + '<button type="button" class="btn btn-s cancel">取消</button></p></form></td></tr>')
+                    .data('id', id).data('comment', comment).insertAfter(tr);
+
+            $('input[name=author]', edit).val(comment.author);
+            $('input[name=mail]', edit).val(comment.mail);
+            $('input[name=url]', edit).val(comment.url);
+            $('textarea[name=text]', edit).val(comment.text).focus();
+
+            $('.cancel', edit).click(function () {
+                var tr = $(this).parents('tr');
+
+                $('#' + tr.data('id')).show();
+                tr.remove();
+            });
+
+            $('form', edit).submit(function () {
+                var t = $(this), tr = t.parents('tr'),
+                        oldTr = $('#' + tr.data('id')),
+                        comment = oldTr.data('comment');
+
+                $('form', tr).each(function () {
+                    var items = $(this).serializeArray();
+
+                    for (var i = 0; i < items.length; i++) {
+                        var item = items[i];
+                        comment[item.name] = item.value;
+                    }
+                });
+
+                var html = '<strong class="comment-author">'
+                        + (comment.url ? '<a target="_blank" href="' + comment.url + '">'
+                        + comment.author + '</a>' : comment.author) + '</strong>'
+                        + ('comment' != comment.type ? '<small>引用</small>' : '')
+                        + (comment.mail ? '<br /><span><a href="mailto:' + comment.mail + '">'
+                        + comment.mail + '</a></span>' : '')
+                        + (comment.ip ? '<br /><span>' + comment.ip + '</span>' : '');
+
+                $('.comment-meta', oldTr).html(html)
+                        .effect('highlight');
+                $('.comment-content', oldTr).html('<p>' + comment.text + '</p>');
+                oldTr.data('comment', comment);
+
+                $.post(t.attr('action'), comment, function (o) {
+                    $('.comment-content', oldTr).html(o.comment.content)
+                            .effect('highlight');
+                }, 'json');
+
+                oldTr.show();
+                tr.remove();
+
+                return false;
+            });
+
+            return false;
+        });
+    });
+</script>
+{% endblock %}

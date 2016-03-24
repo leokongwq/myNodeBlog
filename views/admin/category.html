@@ -1,0 +1,198 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="main">
+    <div class="body container">
+        <div class="typecho-page-title">
+            <h2>新增分类</h2>
+        </div>
+        <div class="row typecho-page-main" role="form">
+            <div class="col-mb-12 col-tb-6 col-tb-offset-3">
+                <form action="/admin/category" method="post" enctype="application/x-www-form-urlencoded">
+                    <ul class="typecho-option" id="typecho-option-item-name-0">
+                        <li>
+                            <label class="typecho-label" for="name-0-1">分类名称 *</label>
+                            <input id="name-0-1" name="name" type="text" class="text" value="{{meta.name}}" />
+                        </li>
+                    </ul>
+                    <ul class="typecho-option" id="typecho-option-item-slug-1">
+                        <li>
+                            <label class="typecho-label" for="slug-0-2">分类缩略名</label>
+                            <input id="slug-0-2" name="slug" type="text" class="text"  value="{{meta.slug}}"/>
+                            <p class="description">分类缩略名用于创建友好的链接形式, 建议使用字母, 数字, 下划线和横杠.</p>
+                        </li>
+                    </ul>
+                    <ul class="typecho-option" id="typecho-option-item-parent-2">
+                        <li>
+                            <label class="typecho-label" for="parent-0-3">
+                                父级分类</label>
+                            <select name="parent" id="parent-0-3">
+                                <option value="0">不选择</option>
+                                {% if categorys %}
+                                {% for category in categorys%}
+                                <option value="{{category.id}}">{{category.name}}</option>
+                                {% endfor %}
+                                {% endif %}
+                            </select>
+                            <p class="description">此分类将归档在您选择的父级分类下.</p>
+                        </li>
+                    </ul>
+                    <ul class="typecho-option" id="typecho-option-item-description-3">
+                        <li>
+                            <label class="typecho-label" for="description-0-4">分类描述</label>
+                                <textarea id="description-0-4" name="description">
+                                    {{meta.description}}
+                                </textarea>
+                            <p class="description">此文字用于描述分类, 在有的主题中它会被显示.</p>
+                        </li>
+                    </ul>
+                    <ul class="typecho-option" id="typecho-option-item-mid-5" style="display:none">
+                        <li>
+                            <input name="mid" type="hidden" value="{{meta.id}}" />
+                        </li>
+                    </ul>
+                    <ul class="typecho-option typecho-option-submit" id="typecho-option-item--6">
+                        <li>
+                            {% if meta %}
+                            <button type="submit" class="btn primary">编辑分类</button>
+                            {% endif %}
+                            {% if !meta %}
+                            <button type="submit" class="btn primary">增加分类</button>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block jsBlock %}
+<script>
+    (function () {
+        $(document).ready(function() {
+            // 处理消息机制
+            (function () {
+                var prefix = '716f68e4233725c4cc57cf549cb1cee0',
+                        cookies = {
+                            notice      :   $.cookie(prefix + '__typecho_notice'),
+                            noticeType  :   $.cookie(prefix + '__typecho_notice_type'),
+                            highlight   :   $.cookie(prefix + '__typecho_notice_highlight')
+                        },
+                        path = '/';
+
+                if (!!cookies.notice && 'success|notice|error'.indexOf(cookies.noticeType) >= 0) {
+                    var head = $('.typecho-head-nav'),
+                            p = $('<div class="message popup ' + cookies.noticeType + '">'
+                                    + '<ul><li>' + $.parseJSON(cookies.notice).join('</li><li>')
+                                    + '</li></ul></div>'), offset = 0;
+
+                    if (head.length > 0) {
+                        p.insertAfter(head);
+                        offset = head.outerHeight();
+                    } else {
+                        p.prependTo(document.body);
+                    }
+
+                    function checkScroll () {
+                        if ($(window).scrollTop() >= offset) {
+                            p.css({
+                                'position'  :   'fixed',
+                                'top'       :   0
+                            });
+                        } else {
+                            p.css({
+                                'position'  :   'absolute',
+                                'top'       :   offset
+                            });
+                        }
+                    }
+
+                    $(window).scroll(function () {
+                        checkScroll();
+                    });
+
+                    checkScroll();
+
+                    p.slideDown(function () {
+                        var t = $(this), color = '#C6D880';
+
+                        if (t.hasClass('error')) {
+                            color = '#FBC2C4';
+                        } else if (t.hasClass('notice')) {
+                            color = '#FFD324';
+                        }
+
+                        t.effect('highlight', {color : color})
+                                .delay(5000).slideUp(function () {
+                            $(this).remove();
+                        });
+                    });
+
+
+                    $.cookie(prefix + '__typecho_notice', null, {path : path});
+                    $.cookie(prefix + '__typecho_notice_type', null, {path : path});
+                }
+
+                if (cookies.highlight) {
+                    $('#' + cookies.highlight).effect('highlight', 1000);
+                    $.cookie(prefix + '__typecho_notice_highlight', null, {path : path});
+                }
+            })();
+
+
+            // 导航菜单 tab 聚焦时展开下拉菜单
+            (function () {
+                $('#typecho-nav-list').find('.parent a').focus(function() {
+                    $('#typecho-nav-list').find('.child').hide();
+                    $(this).parents('.root').find('.child').show();
+                });
+                $('.operate').find('a').focus(function() {
+                    $('#typecho-nav-list').find('.child').hide();
+                });
+            })();
+
+
+            if ($('.typecho-login').length == 0) {
+                $('a').each(function () {
+                    var t = $(this), href = t.attr('href');
+
+                    if ((href && href[0] == '#')
+                            || /^http\:\/\/www\.leokong\.com\/admin\/.*$/.exec(href)
+                            || /^http\:\/\/www\.leokong\.com\/index\.php\/action\/[_a-zA-Z0-9\/]+.*$/.exec(href)) {
+                        return;
+                    }
+
+                    t.attr('target', '_blank');
+                });
+            }
+        });
+    })();
+</script>
+<script>
+    (function () {
+        $(document).ready(function () {
+            var error = $('.typecho-option .error:first');
+
+            if (error.length > 0) {
+                $('html,body').scrollTop(error.parents('.typecho-option').offset().top);
+            }
+
+            $('form').submit(function () {
+                if (this.submitted) {
+                    return false;
+                } else {
+                    this.submitted = true;
+                }
+            });
+
+            $('label input[type=text]').click(function (e) {
+                var check = $('#' + $(this).parents('label').attr('for'));
+                check.prop('checked', true);
+                return false;
+            });
+        });
+    })();
+</script>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="categories clearfix">
+    {% if categorys %}
+        {% for category in categorys %}
+        <div class="span6">
+        <div class="widget">
+            <div class="widget-title">
+                <a href="/category/{{ category.slug }}">{{ category.name }}</a>
+                <span>文章：{{ category.totalPages || 0 }}</span>
+            </div>
+            <div class="widget-desc">
+                {{ category.description }}
+            </div>
+            <ul class="widget-list">
+                {% for page in category.pages %}
+                <li><a href="/posts/{{page.slug}}.html" target="_blank">{{ page.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

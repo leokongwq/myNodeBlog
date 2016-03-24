@@ -1,0 +1,27 @@
+{
+  "name": "leoNodeBlog",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "async": "^1.5.2",
+    "body-parser": "~1.13.2",
+    "cookie-parser": "~1.3.5",
+    "debug": "~2.2.0",
+    "express": "~4.13.1",
+    "express-session": "^1.13.0",
+    "ip": "^1.1.2",
+    "log4js": "^0.6.33",
+    "moment": "^2.12.0",
+    "morgan": "~1.6.1",
+    "multer": "^1.1.0",
+    "node-markdown": "^0.1.1",
+    "request": "^2.69.0",
+    "serve-favicon": "~2.3.0",
+    "swig": "^1.4.2",
+    "weui": "^0.4.0",
+    "xml2js": "^0.4.16"
+  }
+}

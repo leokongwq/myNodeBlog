@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>网站概要 - 小沙弥'Blog - Powered by NodeJs</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="/admin/css/normalize.css">
+    <link rel="stylesheet" href="/admin/css/grid.css">
+    <link rel="stylesheet" href="/admin/css/style.css">
+    <!--[if lt IE 9]>
+    <script src="/admin/js/html5shiv.js"></script>
+    <script src="/admin/js/respond.js"></script>
+    <![endif]-->    </head>
+<body>
+<!--[if lt IE 9]>
+<div class="message error browsehappy" role="dialog">当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>.</div>
+<![endif]-->
+<div class="typecho-head-nav clearfix" role="navigation">
+    <nav id="typecho-nav-list">
+        <ul class="root focus">
+            <li class="parent"><a href="/admin/index">控制台</a></dt></li>
+            <ul class="child"><li class="focus"><a href="/admin/index">概要</a></li>
+                <li><a href="/admin/profile">个人设置</a></li>
+            </ul>
+        </ul>
+        <ul class="root">
+            <li class="parent"><a href="/admin/write-post">撰写</a></dt></li>
+            <ul class="child">
+                <li><a href="/admin/write-post">撰写文章</a></li>
+            </ul>
+        </ul><ul class="root">
+        <li class="parent"><a href="/admin/manage-posts">管理</a></dt></li>
+        <ul class="child">
+            <li><a href="/admin/manage-posts">文章</a></li>
+            <li><a href="/admin/manage-comments">评论</a></li>
+            <li><a href="/admin/manage-categories">分类</a></li>
+            <li><a href="/admin/manage-tags">标签</a></li>
+            <li><a href="/admin/manage-medias">文件</a></li>
+            <li><a href="/admin/manage-users">用户</a></li>
+            <li class="last"><a href="/admin/extending?panel=Links%2Fmanage-links">友情链接</a></li>
+        </ul>
+    </ul>
+        <ul class="root">
+            <li class="parent"><a href="/admin/options-general">设置</a></dt></li>
+            <ul class="child"><li><a href="/admin/options-general">基本</a></li>
+                <li><a href="/admin/options-discussion">评论</a></li>
+                <li><a href="/admin/options-reading">阅读</a></li>
+                <li class="last"><a href="/admin/options-permalink">永久链接</a></li>
+            </ul>
+        </ul>
+    </nav>
+    <div class="operate">
+        <a title="最后登录: {{user.lastLogin}}" href="/admin/profile" class="author">{{user.nickName}}</a>
+        <a class="exit" href="/logout">登出</a><a href="/">网站</a>
+    </div>
+</div>
+
+<div class="main">
+    <div class="container typecho-dashboard">
+    {% block content %}
+
+    {% endblock %}
+    </div>
+</div>
+
+<div class="typecho-foot" role="contentinfo">
+    <div class="copyright">
+        <p>由 <a href="https://nodejs.org" target="_blank">NodeJs</a> 构建, 版本 v5.4.0</p>
+    </div>
+    <nav class="resource">
+        <a href="https://nodejs.org/en/docs/">帮助文档</a> &bull;
+        <a href="https://nodejs.org/en/blog/">NEWS</a> &bull;
+        <a href="https://nodejs.org/en/download/">下载</a>
+    </nav>
+</div>
+<script src="/admin/js/jquery.js"></script>
+<script src="/admin/js/jquery-ui.js"></script>
+<script src="/admin/js/typecho.js"></script>
+
+{% block jsBlock %}
+
+{% endblock %}
+</body>
+</html>

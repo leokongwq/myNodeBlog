@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    {% for page  in pages %}
+        </li>
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+            <h2 class="post-title" itemprop="name headline"><a itemtype="url" href="/posts/{{page.slug}}.html">{{page.title}}</a></h2>
+            <ul class="post-meta clearfix">
+                <li><i class="fa fa-book"></i> </li>
+                <li><i class="fa fa-clock-o"></i>{{page.created}}</time></li>
+                <li><i class="fa fa-eye"></i> 阅读 {{page.viewsNum}}</li>
+                <li itemprop="interactionCount"><a itemprop="discussionUrl" href="/posts/{{page.slug}}.html#comments"><i class="fa fa-comments-o"> 评论 {{page.commentsNum}}</i></a></li>
+            </ul>
+        </article>
+    {% endfor %}
+    <div class="page-navigator">
+        {% if hasPre %}
+        <a class="next" title="" href="/?pn={{ crtPage - 1 }}">上一页</a>
+        {% endif %}
+
+        {% if hasNext %}
+        <a class="next" title="" href="/?pn={{ crtPage + 1}}">下一页</a>
+        {% endif %}
+    </div>
+{% endblock %}

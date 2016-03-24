@@ -1,0 +1,105 @@
+{% extends 'layout-page.html' %}
+
+{% block article %}
+<h1 class="post-title" itemprop="name headline"><a itemtype="url" href="/about.html">{{page.title}}</a></h1>
+<ul class="post-meta clearfix">
+    <li itemprop="author" itemscope itemtype="http://schema.org/Person"><i class="fa fa-user"></i> <a itemprop="name" href="/author/1/" rel="author">{{page.id}}</a></li>
+    <li><i class="fa fa-book"></i> </li>
+    <li><i class="fa fa-clock-o"></i> <time datetime="2016-03-07T11:10:00+00:00" itemprop="datePublished">{{ page.created }}</time></li>
+    <li><i class="fa fa-eye"></i> 阅读({{page.viewsNum}})</li>
+    <li itemprop="interactionCount"><a itemprop="discussionUrl" href="/posts/{{page.slug}}.html#comments"><i class="fa fa-comments-o"> 评论({{page.commentsNum}})</i></a></li>
+</ul>
+<div class="post-content" itemprop="articleBody">
+    {% autoescape false %}
+    {{ page.text }}
+    {% endautoescape %}
+</div>
+{% endblock %}
+
+<!-- 评论 -->
+{% block comment %}
+        {% if comments %}
+        <p>
+            {% if comments.length == 1%}
+            仅有一条评论
+            {% endif %}
+            {% if comments.length > 1 %}
+            已有 {{comments.length}} 条评论
+            {% endif %}
+            <a class="pull-right" href="#respond-post-{{page.id}}"><i class="fa fa-pencil"></i> 添加新评论</a>
+        </p>
+        <ol class="comment-list">
+            {% for comment in comments %}
+            <li itemscope itemtype="http://schema.org/UserComments" id="comment-{{comment.id}}" class="comment-body comment-parent comment-odd comment-by-author">
+                <div class="comment-meta">
+                    <div class="comment-meta-author" itemprop="creator" itemscope itemtype="http://schema.org/Person">
+                        <span itemprop="image"><img class="avatar" src="/gravatars/avarta.jpg" alt="{{comment.authorName}}" width="32" height="32" /></span>
+                        <cite class="fn" itemprop="name"><a href="/" rel="external nofollow">{{comment.authorName}}</a></cite>
+                    </div>
+                    <div class="comment-meta-time">
+                        <a href="/posts/{{page.slug}}.html#comment-{{comment.id}}">{{comment.created}}</a>
+                    </div>
+                    <div class="comment-meta-reply">
+                        <a href="/posts/{{page.slug}}.html?replyTo={{comment.id}}#respond-post-{{page.id}}" rel="nofollow" onclick="return TypechoComment.reply('comment-{{comment.id}}', {{comment.id}});">回复</a>        </div>
+                </div>
+                <div class="comment-content" itemprop="commentText">
+                    {% autoescape false %}
+                    <p>{{comment.text}}</p>
+                    {% endautoescape %}
+                </div>
+            </li>
+            {% endfor %}
+        </ol>
+        {% endif %}
+
+        <!-- 用户登陆 -->
+        {% if !user %}
+        <div id="respond-post-{{page.id}}" class="respond">
+            <div class="cancel-comment-reply">
+                <a id="cancel-comment-reply-link" href="/posts/{{page.id}}.html#respond-post-{{page.id}}" rel="nofollow" style="display:none" onclick="return TypechoComment.cancelReply();">取消回复</a>
+            </div>
+            <h3 id="response">添加新评论</h3>
+            <form method="post" action="/posts/{{page.id}}/comment" id="comment-form" role="form">
+                <p class="span4">
+                    <label for="author" class="required">称呼</label>
+                    <input type="text" name="author" id="author" class="text" value="" required />
+                </p>
+                <p class="span4">
+                    <label for="mail" class="required">Email</label>
+                    <input type="email" name="mail" id="mail" class="text" value="" required />
+                </p>
+                <p class="span4">
+                    <label for="url">网站</label>
+                    <input type="url" name="url" id="url" class="text" placeholder="http://" value="" />
+                </p>
+                <p class="span12">
+                    <label for="textarea" class="required">内容</label>
+                    <textarea rows="8" cols="50" name="text" id="textarea" class="textarea" required ></textarea>
+                </p>
+                <p class="span12">
+                    <button type="submit" class="submit btn s3">提交评论</button>
+                </p>
+            </form>
+        </div>
+        {% endif %}
+        <!-- 用户登陆 -->
+        {% if user %}
+        <div id="respond-post-{{page.id}}" class="respond">
+            <div class="cancel-comment-reply">
+                <a id="cancel-comment-reply-link" href="http://www.leokong.com/index.php/2016/02/04/28.html#respond-post-28" rel="nofollow" style="display:none" onclick="return TypechoComment.cancelReply();">取消回复</a>        </div>
+                <h3 id="response">添加新评论</h3>
+                <form method="post" action="/posts/{{page.id}}/comment" id="comment-form" role="form">
+                    <p class="span12">登录身份: <a href="/admin/profile">{{user.nickName}}</a>. <a href="/logout" title="Logout">退出 &raquo;</a></p>
+                    <p class="span12">
+                        <label for="textarea" class="required">内容</label>
+                        <textarea rows="8" cols="50" name="text" id="textarea" class="textarea" required ></textarea>
+                    </p>
+                    <p class="span12">
+                        <button type="submit" class="submit btn s3">提交评论</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+

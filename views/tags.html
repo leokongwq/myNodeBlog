@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<article class="post preview" itemscope itemtype="http://schema.org/BlogPosting">
+    <h1 class="post-title" itemprop="name headline">{{slug}}</h1>
+    <div class="post-content" itemprop="articleBody">
+        {% if tags %}
+            <div class="tag-list">
+                <ul class="tag-list">
+                    {% for tag in tags %}
+                        <li><a href="/tag/{{tag.slug}}/" title="{{tag.count}}个话题">{{tag.name}}({{tag.count}})</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</article>
+{% endblock %}

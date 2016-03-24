@@ -1,0 +1,56 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+{% if page %}
+  <article class="post preview" itemscope itemtype="http://schema.org/BlogPosting">
+    <h1 class="post-title" itemprop="name headline"><a itemtype="url" href="/about.html">{{page.title}}</a></h1>
+    <div class="post-content" itemprop="articleBody">
+      {% autoescape false %}
+        {{ page.text }}
+      {% endautoescape %}
+    </div>
+  </article>
+  <div id="comments">
+    <p>
+      仅有一条评论
+      <a class="pull-right" href="#respond-page-2"><i class="fa fa-pencil"></i> 添加新评论</a>
+    </p>
+
+    <ol class="comment-list">
+      <li itemscope itemtype="http://schema.org/UserComments" id="comment-2" class="comment-body comment-parent comment-odd comment-by-author">
+        <div class="comment-meta">
+          <div class="comment-meta-author" itemprop="creator" itemscope itemtype="http://schema.org/Person">
+            <span itemprop="image"><img class="avatar" src="/gravatars/avarta.jpg" alt="java小沙弥" width="32" height="32" /></span>
+            <cite class="fn" itemprop="name"><a href="http://www.typecho.org" rel="external nofollow">java小沙弥</a></cite>
+          </div>
+          <div class="comment-meta-time">
+            <a href="http://www.leokong.com/index.php/about.html#comment-2"><time itemprop="commentTime" datetime="2016-01-10T16:00:01+00:00">January 10th, 2016 at 04:00 pm</time></a>
+          </div>
+          <div class="comment-meta-reply">
+            <a href="http://www.leokong.com/index.php/about.html?replyTo=2#respond-page-2" rel="nofollow" onclick="return TypechoComment.reply('comment-2', 2);">回复</a></div>
+        </div>
+        <div class="comment-content" itemprop="commentText">
+          <p>自己评论自己。</p>
+        </div>
+      </li>
+    </ol>
+
+    <div id="respond-page-2" class="respond">
+      <div class="cancel-comment-reply">
+        <a id="cancel-comment-reply-link" href="http://www.leokong.com/index.php/about.html#respond-page-2" rel="nofollow" style="display:none" onclick="return TypechoComment.cancelReply();">取消回复</a>
+      </div>
+      <h3 id="response">添加新评论</h3>
+      <form method="post" action="http://www.leokong.com/index.php/about.html/comment" id="comment-form" role="form">
+        <p class="span12">登录身份: <a href="http://www.leokong.com/admin/profile.php">java小沙弥</a>. <a href="http://www.leokong.com/index.php/action/logout" title="Logout">退出 &raquo;</a></p>
+        <p class="span12">
+          <label for="textarea" class="required">内容</label>
+          <textarea rows="8" cols="50" name="text" id="textarea" class="textarea" required ></textarea>
+        </p>
+        <p class="span12">
+          <button type="submit" class="submit btn s3">提交评论</button>
+        </p>
+      </form>
+    </div>
+  </div>
+{% endif %}>
+{% endblock %}
