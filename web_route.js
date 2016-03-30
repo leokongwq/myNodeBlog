@@ -61,9 +61,19 @@ router.post('/admin/comments-edit', auth.adminRequired, admin.commentMgr);
 //管理分类
 router.get('/admin/manage-categories', auth.adminRequired, admin.categoryList);
 router.post('/admin/categories-edit', auth.adminRequired, admin.categoryMgr);
-
 router.get('/admin/category', auth.adminRequired, admin.createMeta);
 router.post('/admin/category', auth.adminRequired, admin.doCreateMeta);
+
+//管理标签
+router.get('/admin/manage-tags', auth.adminRequired, admin.tagList);
+router.post('/admin/metas-tag-edit', auth.adminRequired, admin.doSaveUpdateTag);
+router.post('/admin/deleteTags', auth.adminRequired, admin.deleteTags);
+
+//管理友链
+router.get('/admin/links', auth.adminRequired, admin.links);
+router.post('/admin/link', auth.adminRequired, admin.doSaveUpdateLink);
+router.post('/admin/deleteLinks', auth.adminRequired, admin.deleteLinks);
+
 
 router.get('/pay/index', syk.index);
 router.get('/wxpay/jsapi/', syk.prePay);

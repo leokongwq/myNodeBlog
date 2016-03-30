@@ -82,6 +82,9 @@ Post.queryAll = function(cb){
  */
 Post.pageQuery = function (cond, pageNo, pageSize, cb) {
     Posts.find(cond, {offset: (pageNo - 1) * pageSize}, pageSize, ["created", 'Z'], function (err, posts) {
+        if (err){
+            return cb(err);
+        }
         if (posts.length > 0) {
             for (var i = 0; i < posts.length; i++) {
                 posts[i] = posts[i];

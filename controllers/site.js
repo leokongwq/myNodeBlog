@@ -32,9 +32,6 @@ exports.index = function(req, res, next){
             blogs.forEach(function(blog){
                 blog.created = moment.unix(blog.created).format('YYYY-MM-DD');
             });
-
-            console.log(pageNo > 1 && blogs.length > 0);
-
             var data = {
                 total : total,
                 crtPage : pageNo,
@@ -161,7 +158,6 @@ exports.archives = function(req, res){
             };
             archives.push(elem);
         }
-        console.log(archives);
         data.archives = archives;
         //按月分组
         res.render('archives', data);

@@ -1,0 +1,277 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="typecho-page-title">
+    <h2>管理友情链接</h2>
+</div>
+<div class="row typecho-page-main manage-metas">
+    <div class="col-mb-12 col-tb-8" role="main">
+        <form method="post" name="manage_categories" class="operate-form">
+            <div class="typecho-list-operate clearfix">
+                <div class="operate">
+                    <label><i class="sr-only">全选</i><input type="checkbox" class="typecho-table-select-all"/></label>
+                    <div class="btn-group btn-drop">
+                        <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only">操作</i>选中项 <i
+                                class="i-caret-down"></i></button>
+                        <ul class="dropdown-menu">
+                            <li><a lang="你确认要删除这些链接吗?" href="/admin/deleteLinks">删除</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="typecho-table-wrap">
+                <table class="typecho-list-table">
+                    <colgroup>
+                        <col width="20"/>
+                        <col width="25%"/>
+                        <col width=""/>
+                        <col width="15%"/>
+                        <col width="10%"/>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>链接名称</th>
+                        <th>链接地址</th>
+                        <th>分类</th>
+                        <th>图片</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% if !links %}
+                        <tr>
+                            <td colspan="6">
+                                <h6 class="typecho-list-table-title">没有任何文章</h6>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% for link in links %}
+                        <tr id="lid-1">
+                            <td><input type="checkbox" value="{{ link.id }}" name="lids"/></td>
+                            <td><a href="/admin/links?lid={{ link.id }}" title="点击编辑">{{ link.name }}</a>
+                            <td>{{ link.url }}</td>
+                            <td></td>
+                            <td><img class="avatar" src="{{ link.image }}" alt="NOPIC" width="32" height="32" onerror="this.src='/images/dftAvarta.jpg'"/></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+    <div class="col-mb-12 col-tb-4" role="form">
+        <form action="/admin/link" method="post" enctype="application/x-www-form-urlencoded">
+            <ul class="typecho-option" id="typecho-option-item-name-0">
+                <li>
+                    <label class="typecho-label" for="name-0-1">链接名称*</label>
+                    <input id="name-0-1" name="name" type="text" class="text" value="{{ link.name }}"/>
+                </li>
+            </ul>
+            <ul class="typecho-option" id="typecho-option-item-url-1">
+                <li>
+                    <label class="typecho-label" for="url-0-2">链接地址*</label>
+                    <input id="url-0-2" name="url" type="text" class="text" value="{{ link.url }}" placeholder="http://"/>
+                </li>
+            </ul>
+            <ul class="typecho-option" id="typecho-option-item-sort-2">
+                <li>
+                    <label class="typecho-label" for="sort-0-3">链接分类</label>
+                    <input id="sort-0-3" name="sort" type="text" class="text" value=""/>
+                    <p class="description">{{ link.sort }}</p>
+                </li>
+            </ul>
+            <ul class="typecho-option" id="typecho-option-item-image-3">
+                <li>
+                    <label class="typecho-label" for="image-0-4">链接图片</label>
+                    <input id="image-0-4" name="image" type="text" class="text" value="{{ link.image }}" placeholder="http://"/>
+                    <p class="description">需要以http://开头，留空表示没有链接图片</p>
+                </li>
+            </ul>
+            <ul class="typecho-option" id="typecho-option-item-description-4">
+                <li>
+                    <label class="typecho-label" for="description-0-5">链接描述</label>
+                        <textarea id="description-0-5" name="description">
+                            {{ link.description }}
+                        </textarea>
+                </li>
+            </ul>
+            <ul class="typecho-option" id="typecho-option-item-user-5">
+                <li>
+                    <label class="typecho-label" for="user-0-6">自定义数据</label>
+                    <input id="user-0-6" name="user" type="text" class="text" value="{{ link.user }}"/>
+                    <p class="description">该项用于用户自定义数据扩展</p>
+                </li>
+            </ul>
+            <ul class="typecho-option" id="typecho-option-item-do-6" style="display:none">
+                <li>
+                    <input name="do" type="hidden" value="update"/>
+                </li>
+            </ul>
+            <ul class="typecho-option" id="typecho-option-item-lid-{{ link.id }}" style="display:none">
+                <li>
+                    <input name="lid" type="hidden" value="{{ link.id }}"/>
+                </li>
+            </ul>
+            <ul class="typecho-option typecho-option-submit" id="typecho-option-item--8">
+                <li>
+                    <button type="submit" class="btn primary">
+                        编辑链接
+                    </button>
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block jsBlock %}
+<script>
+    (function () {
+        $(document).ready(function () {
+            // 处理消息机制
+            (function () {
+                var prefix = '716f68e4233725c4cc57cf549cb1cee0',
+                        cookies = {
+                            notice: $.cookie(prefix + '__typecho_notice'),
+                            noticeType: $.cookie(prefix + '__typecho_notice_type'),
+                            highlight: $.cookie(prefix + '__typecho_notice_highlight')
+                        },
+                        path = '/';
+
+                if (!!cookies.notice && 'success|notice|error'.indexOf(cookies.noticeType) >= 0) {
+                    var head = $('.typecho-head-nav'),
+                            p = $('<div class="message popup ' + cookies.noticeType + '">'
+                                    + '<ul><li>' + $.parseJSON(cookies.notice).join('</li><li>')
+                                    + '</li></ul></div>'), offset = 0;
+
+                    if (head.length > 0) {
+                        p.insertAfter(head);
+                        offset = head.outerHeight();
+                    } else {
+                        p.prependTo(document.body);
+                    }
+
+                    function checkScroll() {
+                        if ($(window).scrollTop() >= offset) {
+                            p.css({
+                                'position': 'fixed',
+                                'top': 0
+                            });
+                        } else {
+                            p.css({
+                                'position': 'absolute',
+                                'top': offset
+                            });
+                        }
+                    }
+
+                    $(window).scroll(function () {
+                        checkScroll();
+                    });
+
+                    checkScroll();
+
+                    p.slideDown(function () {
+                        var t = $(this), color = '#C6D880';
+
+                        if (t.hasClass('error')) {
+                            color = '#FBC2C4';
+                        } else if (t.hasClass('notice')) {
+                            color = '#FFD324';
+                        }
+
+                        t.effect('highlight', {color: color})
+                                .delay(5000).slideUp(function () {
+                            $(this).remove();
+                        });
+                    });
+
+
+                    $.cookie(prefix + '__typecho_notice', null, {path: path});
+                    $.cookie(prefix + '__typecho_notice_type', null, {path: path});
+                }
+
+                if (cookies.highlight) {
+                    $('#' + cookies.highlight).effect('highlight', 1000);
+                    $.cookie(prefix + '__typecho_notice_highlight', null, {path: path});
+                }
+            })();
+
+
+            // 导航菜单 tab 聚焦时展开下拉菜单
+            (function () {
+                $('#typecho-nav-list').find('.parent a').focus(function () {
+                    $('#typecho-nav-list').find('.child').hide();
+                    $(this).parents('.root').find('.child').show();
+                });
+                $('.operate').find('a').focus(function () {
+                    $('#typecho-nav-list').find('.child').hide();
+                });
+            })();
+
+
+            if ($('.typecho-login').length == 0) {
+                $('a').each(function () {
+                    var t = $(this), href = t.attr('href');
+
+                    if ((href && href[0] == '#')
+                            || /^http\:\/\/www\.leokong\.com\/admin\/.*$/.exec(href)
+                            || /^http\:\/\/www\.leokong\.com\/index\.php\/action\/[_a-zA-Z0-9\/]+.*$/.exec(href)) {
+                        return;
+                    }
+
+                    t.attr('target', '_blank');
+                });
+            }
+        });
+    })();
+</script>
+<script type="text/javascript">
+    (function () {
+        $(document).ready(function () {
+            var table = $('.typecho-list-table').tableDnD({
+                onDrop: function () {
+                    var ids = [];
+
+                    $('input[type=checkbox]', table).each(function () {
+                        ids.push($(this).val());
+                    });
+
+                    $.post('http://www.leokong.com/index.php/action/links-edit?do=sort',
+                            $.param({lid: ids}));
+
+                    $('tr', table).each(function (i) {
+                        if (i % 2) {
+                            $(this).addClass('even');
+                        } else {
+                            $(this).removeClass('even');
+                        }
+                    });
+                }
+            });
+
+            table.tableSelectable({
+                checkEl: 'input[type=checkbox]',
+                rowEl: 'tr',
+                selectAllEl: '.typecho-table-select-all',
+                actionEl: '.dropdown-menu a'
+            });
+
+            $('.btn-drop').dropdownMenu({
+                btnEl: '.dropdown-toggle',
+                menuEl: '.dropdown-menu'
+            });
+
+            $('.dropdown-menu button.merge').click(function () {
+                var btn = $(this);
+                btn.parents('form').attr('action', btn.attr('rel')).submit();
+            });
+
+            $('.typecho-mini-panel').effect('highlight', '#AACB36');
+        });
+    })();
+</script>
+{% endblock %}

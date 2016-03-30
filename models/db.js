@@ -1,27 +1,18 @@
+var config = require('../config');
+var logger = require('../common/logger');
+var querystring = require('querystring');
 var orm = require('orm');
 
-orm.settings.set('connection.debug', true);
+var optStr = querystring.stringify(config.dbOpt);
+var connStr = config.dbUrl + "?" + optStr;
+//console.log(connStr);
+var db = orm.connect(connStr);
 
-var opts = {
-	user:'root',
-	password:'root@123',
-	host:'127.0.0.1',
-	database:'leoNode',
-	protocol:'mysql',
-	port:'3306',
-	query:{
-		pool: true
-	}
-};
-
-
-var db = orm.connect(opts);
-
-db.on('connect', function(err) {
-  if (err) {
-  	return console.error('Connection error: ' + err);
-  }
-  console.log("connect mysql success!");
+db.on('connect', function (err) {
+    if (err) {
+        return logger.error(err);
+    }
+    logger.info("connect mysql success!");
 });
 
 module.exports = db;

@@ -136,7 +136,7 @@ Meta.batchDelByType = function(mids, type, cb){
  */
 Meta.create = function(meta, cb){
     Metas.create(meta, function(err, newMeata){
-        cb(err);
+        cb(err, newMeata);
     });
 };
 
@@ -156,8 +156,8 @@ Meta.update = function(meta, cb){
         }
         dbMeta.name = meta.name;
         dbMeta.slug = meta.slug;
-        dbMeta.parent = meta.parent;
-        dbMeta.description = meta.description;
+        dbMeta.parent = meta.parent || 0;
+        dbMeta.description = meta.description || 0;
         //update
         dbMeta.save(function(err){
             cb(err);

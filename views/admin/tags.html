@@ -1,0 +1,227 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="typecho-page-title">
+    {% if tag %}
+        <h2>编辑标签 {{ tag.name }}</h2>
+    {% endif %}
+    {% if !tag %}
+        <h2>管理标签</h2>
+    {% endif %}
+</div>
+<div class="row typecho-page-main manage-metas">
+
+    <div class="col-mb-12 col-tb-8" role="main">
+
+        <form method="post" name="manage_tags" class="operate-form">
+            <div class="typecho-list-operate clearfix">
+                <div class="operate">
+                    <label><i class="sr-only">全选</i><input type="checkbox" class="typecho-table-select-all"/></label>
+                    <div class="btn-group btn-drop">
+                        <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only">操作</i>选中项 <i
+                                class="i-caret-down"></i></button>
+                        <ul class="dropdown-menu">
+                            <li><a lang="你确认要删除这些标签吗?"
+                                   href="/admin/deleteTags">删除</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="typecho-list-notable tag-list clearfix">
+                {%  if tags %}
+                {% for tag in tags %}
+                    <li class="size-5" id="tag-31">
+                        <input type="checkbox" value="{{ tag.id }}" name="mids"/>
+                        <span rel="/admin/manage-tags?mid={{ tag.id }}">{{ tag.name }}</span>
+                        <a class="tag-edit-link" href="/admin/manage-tags?mid={{ tag.id }}"><i class="i-edit"></i></a>
+                    </li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+        </form>
+
+    </div>
+    <div class="col-mb-12 col-tb-4" role="form">
+        <form action="/admin/metas-tag-edit" method="post" enctype="application/x-www-form-urlencoded">
+            <ul class="typecho-option" id="typecho-option-item-name-0">
+                <li>
+                    <label class="typecho-label" for="name-0-1">
+                        标签名称 *</label>
+                    <input id="name-0-1" name="name" type="text" class="text" value="{{ tag.name }}"/>
+                    <p class="description">
+                        这是标签在站点中显示的名称.可以使用中文,如 "地球".</p>
+                </li>
+            </ul>
+            <ul class="typecho-option" id="typecho-option-item-slug-1">
+                <li>
+                    <label class="typecho-label" for="slug-0-2">
+                        标签缩略名</label>
+                    <input id="slug-0-2" name="slug" type="text" class="text" value="{{ tag.slug }}"/>
+                    <p class="description">
+                        标签缩略名用于创建友好的链接形式, 如果留空则默认使用标签名称.</p>
+                </li>
+            </ul>
+            <ul class="typecho-option" id="typecho-option-item-do-2" style="display:none">
+                <li>
+                    {% if tag %}
+                    <input name="do" type="hidden" value="update"/>
+                    {% endif %}
+                    {% if !tag %}
+                    <input name="do" type="hidden" value="add"/>
+                    {% endif %}
+                </li>
+            </ul>
+            <ul class="typecho-option" id="typecho-option-item-mid-{{ tag.id }}" style="display:none">
+                <li>
+                    <input name="mid" type="hidden" value="{{ tag.id }}"/>
+                </li>
+            </ul>
+            <ul class="typecho-option typecho-option-submit" id="typecho-option-item--{{ tag.id }}">
+                <li>
+                    <button type="submit" class="btn primary">
+                        {% if tag %}
+                            编辑标签
+                        {% endif %}
+                        {% if !tag %}
+                            添加标签
+                        {% endif %}
+                    </button>
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block jsBlock %}
+<script>
+    (function () {
+        $(document).ready(function () {
+            // 处理消息机制
+            (function () {
+                var prefix = '716f68e4233725c4cc57cf549cb1cee0',
+                        cookies = {
+                            notice: $.cookie(prefix + '__typecho_notice'),
+                            noticeType: $.cookie(prefix + '__typecho_notice_type'),
+                            highlight: $.cookie(prefix + '__typecho_notice_highlight')
+                        },
+                        path = '/';
+
+                if (!!cookies.notice && 'success|notice|error'.indexOf(cookies.noticeType) >= 0) {
+                    var head = $('.typecho-head-nav'),
+                            p = $('<div class="message popup ' + cookies.noticeType + '">'
+                                    + '<ul><li>' + $.parseJSON(cookies.notice).join('</li><li>')
+                                    + '</li></ul></div>'), offset = 0;
+
+                    if (head.length > 0) {
+                        p.insertAfter(head);
+                        offset = head.outerHeight();
+                    } else {
+                        p.prependTo(document.body);
+                    }
+
+                    function checkScroll() {
+                        if ($(window).scrollTop() >= offset) {
+                            p.css({
+                                'position': 'fixed',
+                                'top': 0
+                            });
+                        } else {
+                            p.css({
+                                'position': 'absolute',
+                                'top': offset
+                            });
+                        }
+                    }
+
+                    $(window).scroll(function () {
+                        checkScroll();
+                    });
+
+                    checkScroll();
+
+                    p.slideDown(function () {
+                        var t = $(this), color = '#C6D880';
+
+                        if (t.hasClass('error')) {
+                            color = '#FBC2C4';
+                        } else if (t.hasClass('notice')) {
+                            color = '#FFD324';
+                        }
+
+                        t.effect('highlight', {color: color})
+                                .delay(5000).slideUp(function () {
+                            $(this).remove();
+                        });
+                    });
+
+
+                    $.cookie(prefix + '__typecho_notice', null, {path: path});
+                    $.cookie(prefix + '__typecho_notice_type', null, {path: path});
+                }
+
+                if (cookies.highlight) {
+                    $('#' + cookies.highlight).effect('highlight', 1000);
+                    $.cookie(prefix + '__typecho_notice_highlight', null, {path: path});
+                }
+            })();
+
+
+            // 导航菜单 tab 聚焦时展开下拉菜单
+            (function () {
+                $('#typecho-nav-list').find('.parent a').focus(function () {
+                    $('#typecho-nav-list').find('.child').hide();
+                    $(this).parents('.root').find('.child').show();
+                });
+                $('.operate').find('a').focus(function () {
+                    $('#typecho-nav-list').find('.child').hide();
+                });
+            })();
+
+
+            if ($('.typecho-login').length == 0) {
+                $('a').each(function () {
+                    var t = $(this), href = t.attr('href');
+
+                    if ((href && href[0] == '#')
+                            || /^http\:\/\/www\.leokong\.com\/admin\/.*$/.exec(href)
+                            || /^http\:\/\/www\.leokong\.com\/index\.php\/action\/[_a-zA-Z0-9\/]+.*$/.exec(href)) {
+                        return;
+                    }
+
+                    t.attr('target', '_blank');
+                });
+            }
+        });
+    })();
+</script>
+
+<script type="text/javascript">
+    (function () {
+        $(document).ready(function () {
+
+            $('.typecho-list-notable').tableSelectable({
+                checkEl: 'input[type=checkbox]',
+                rowEl: 'li',
+                selectAllEl: '.typecho-table-select-all',
+                actionEl: '.dropdown-menu a'
+            });
+
+            $('.btn-drop').dropdownMenu({
+                btnEl: '.dropdown-toggle',
+                menuEl: '.dropdown-menu'
+            });
+
+            $('.dropdown-menu button.merge').click(function () {
+                var btn = $(this);
+                btn.parents('form').attr('action', btn.attr('rel')).submit();
+            });
+
+            $('.typecho-mini-panel').effect('highlight', '#AACB36');
+        });
+    })();
+</script>
+{% endblock %}

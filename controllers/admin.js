@@ -9,6 +9,7 @@ var metas = require('../models/metas');
 var comments = require('../models/comments');
 var users = require('../models/users');
 var postMetaRel = require('../models/postMetaRel');
+var links = require('../models/links');
 
 /**
  * 管理后台首页
@@ -457,7 +458,7 @@ exports.createMeta = function(req, res, next){
 };
 
 /**
- * 保存分类
+ * 保存,修改分类
  */
 exports.doCreateMeta = function(req, res, next){
     var mid = req.body.mid;
@@ -471,6 +472,7 @@ exports.doCreateMeta = function(req, res, next){
     }
 
     var meta = {
+        id : mid,
         name : name,
         slug : slug,
         parent : parent,
@@ -482,14 +484,14 @@ exports.doCreateMeta = function(req, res, next){
         updated : dateUtil.getNowInt()
     };
 
-    if(mid){
+    if(mid){ //修改
         metas.update(meta, function(err){
             if(err){
                 return next(err);
             }
             return res.redirect('/admin/manage-categories');
         });
-    }else{
+    }else{ //新建
         metas.create(meta, function(err){
             if(err){
                 return next(err);
@@ -499,12 +501,183 @@ exports.doCreateMeta = function(req, res, next){
     }
 };
 
+/**
+ * 查询友情列表
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.links = function(req, res, next){
+    var lid = req.query.lid;
+    links.queryAllLinks(function(err, links){
+        if(err){
+            return next(err);
+        }
+        var data = {
+            user : req.session.user,
+            links : links
+        };
+        if(lid){
+            links.forEach(function(link){
+                if(link.id == parseInt(lid)){
+                    data.link = link;
+                }
+            });
+        }
+        res.render('admin/links', data);
+    });
+};
 
 /**
- * 保存分类
+ * 修改保存友链
+ * @param req
+ * @param res
+ * @param next
  */
-exports.doSavePostMetaRel = function(req, res, next){
+exports.doSaveUpdateLink = function(req, res, next){
+    var name = req.body.name || '';
+    var url = req.body.url || '';
+    var sort = req.body.sort || '';
+    var image = req.body.image || '';
+    var description = req.body.description || '';
+    var user = req.body.user || '';
+    var lid = req.body.lid || 0;
 
+    var link = {
+        name : name,
+        url : url,
+        sort : sort,
+        image : image,
+        description : description,
+        user : user
+    };
+
+    if(lid){// update
+        links.updateLink(link, function(err){
+            if(err){
+                return next(err);
+            }
+            res.redirect('/admin/links');
+        });
+    } else {
+        links.createLink(link, function(err, newLink){
+            if(err){
+                return next(err);
+            }
+            res.redirect('/admin/links');
+        });
+    }
+};
+
+/**
+ * 删除友链
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.deleteLinks = function(req, res, next){
+    var lids = req.body.lids;
+    if(!lids || lids.length == 0){
+        return res.redirect('/admin/links');
+    }
+    links.deleteLink(lids, function(err){
+        if(err){
+            return next(err);
+        }
+        res.redirect('/admin/links');
+    });
+};
+
+/**
+ * 标签列表
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.tagList = function(req, res, next){
+    var mid = req.query.mid;
+    metas.queryAllTags(function(err, tags){
+        if(err){
+            return next(err);
+        }
+        var data = {
+            tags : tags
+        };
+
+        if(mid && parseInt(mid) > 0){
+            tags.forEach(function(tag){
+                if(tag.id = mid){
+                    data.tag = tag;
+                }
+            });
+        }
+        res.render('admin/tags', data);
+    });
+};
+
+/**
+ * 新增,修改标签
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.doSaveUpdateTag = function(req, res, next){
+    var mid = req.query.mid;
+
+    var name = req.body.name;
+    var slug = req.body.slug;
+    var mid = req.body.mid;
+
+    var tag = {
+        name : name,
+        slug : slug
+    };
+
+    if(!name || !slug){
+        return res.redirect('/admin/manage-tags');
+    }
+
+    if(mid && parseInt(mid) > 0){ //更新
+        tag.id = parseInt(mid);
+        tag.updated = dateUtil.getNowInt();
+        metas.update(tag, function(err){
+            if(err){
+                return next(err);
+            }
+            return res.redirect('/admin/manage-tags');
+        });
+    }else{ //新增
+        tag.type = 'tag';
+        tag.description = '';
+        tag.count = 0;
+        tag.order = 0;
+        tag.parent = 0;
+        tag.created = dateUtil.getNowInt();
+        tag.updated = dateUtil.getNowInt();
+
+        metas.create(tag, function(err){
+            if(err){
+                return next(err);
+            }
+            return res.redirect('/admin/manage-tags');
+        });
+    }
+};
+
+/**
+ * 删除标签
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.deleteTags = function(req, res, next){
+    var mids = req.body.mids;
+    metas.batchDelByType(mids, 'tag', function(err){
+        if(err){
+            return next(err);
+        }
+        res.redirect('/admin/manage-tags');
+    });
 };
 
 /**

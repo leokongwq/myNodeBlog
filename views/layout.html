@@ -16,40 +16,75 @@
     <script src="/javascripts/respond.min.js"></script>
     <![endif]-->
     <!-- 通过自有函数输出HTML头部信息 -->
-    <style type="text/css">.testat-dialog{position:fixed;top:100px;left:50%;padding:10px;background-color:#fff;display:none;-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;z-index:1024;}
-    .testat-dialog.error{background-color:#f40;color:#fff;}
-    .testat-dialog.success{background-color:#24AA42;color:#fff;}</style><script type="text/javascript">window.action="http://www.leokong.com/index.php/action/";</script><meta name="description" content="一个喜欢折腾技术的小沙弥" />
-    <meta name="keywords" content="JAVA,分布式,大数据,Linux,缓存,分布式架构,Go" />
-    <meta name="generator" content="Typecho 1.0/14.10.10" />
-    <meta name="template" content="jianshu" />
+    <style type="text/css">
+        .testat-dialog {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            padding: 10px;
+            background-color: #fff;
+            display: none;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            z-index: 1024;
+        }
+
+        .testat-dialog.error {
+            background-color: #f40;
+            color: #fff;
+        }
+
+        .testat-dialog.success {
+            background-color: #24AA42;
+            color: #fff;
+        }
+    </style>
+    <script type="text/javascript">
+        window.action = "http://www.leokong.com/index.php/action/";
+    </script>
+    <meta name="description" content="一个喜欢折腾技术的小沙弥"/>
+    <meta name="keywords" content="JAVA,分布式,大数据,Linux,缓存,分布式架构,Go"/>
+    <meta name="generator" content="Typecho 1.0/14.10.10"/>
+    <link rel="icon" href="/favicon.jpg" type="image/jpg" />
+    <link rel="shortcut icon" href="/favicon.jpg" type="image/jpg" />
 </head>
 <body>
 <!--[if lt IE 8]>
-<div class="browsehappy" role="dialog">当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a href="http://browsehappy.com/">升级你的浏览器</a>.</div>
+<div class="browsehappy" role="dialog">当前网页 <strong>不支持</strong> 你正在使用的浏览器. 为了正常的访问, 请 <a
+        href="http://browsehappy.com/">升级你的浏览器</a>.
+</div>
 <![endif]-->
 {% if user %}
-    <div class="navbar-user">
-        <a class="login" href="/logout"> <i class="fa fa-sign-out"> </i> 退出</a>
-        <a class="login" href="/admin/index"> <i class="fa fa-user"> </i> {{user.nickName}}</a>
-        <a class="set-view-mode pull-right" data-mode="day" href="javascript:void(0)"> <i class="fa fa-moon-o"> </i> </a>
-    </div>
+<div class="navbar-user">
+    <a class="login" href="/logout"> <i class="fa fa-sign-out"> </i> 退出</a>
+    <a class="login" href="/admin/index"> <i class="fa fa-user"> </i> {{user.nickName}}</a>
+    <a class="set-view-mode pull-right" data-mode="day" href="javascript:void(0)"> <i class="fa fa-moon-o"> </i> </a>
+</div>
 {% endif %}
 
 {% if !user %}
-    <div class="navbar-user">
-        <a class="login" href="/login"> <i class="fa fa-sign-in"> </i> 登录</a>
-        <a class="set-view-mode pull-right" data-mode="day" href="javascript:void(0)"> <i class="fa fa-moon-o"> </i> </a>
-    </div>
+<div class="navbar-user">
+    <a class="login" href="/login"> <i class="fa fa-sign-in"> </i> 登录</a>
+    <a class="set-view-mode pull-right" data-mode="day" href="javascript:void(0)"> <i class="fa fa-moon-o"> </i> </a>
+</div>
 {% endif %}
 
 <div class="navbar navbar-jianshu">
     <div class="dropdown">
-        <a class="logo {% if enslug == 'index' %} active {% endif %}" role="button" data-original-title="个人主页" data-container="div.expanded" href="/"> <b> 文 </b> <i class="fa fa-home"> </i> <span class="title"> 首页  </span> </a>
-        <a {% if enslug == "about" %} class="active" {% endif %} href="/about.html" title="关于"><i class="fa fa-about"> </i> <span class="title"> 关于 </span> </a>
-        <a {% if enslug == "cat" %} class="active" {% endif %} href="/categories.html" title="分类"><i class="fa fa-categories"> </i> <span class="title"> 分类 </span> </a>
-        <a {% if enslug == "archive" %} class="active" {% endif %} href="/archives.html" title="存档"><i class="fa fa-archives"> </i> <span class="title"> 存档 </span> </a>
-        <a {% if enslug == "tag" %} class="active" {% endif %} href="/tags.html" title="标签"><i class="fa fa-tags"> </i> <span class="title"> 标签 </span> </a>
-        <a {% if enslug == "link" %} class="active" {% endif %} href="/links.html" title="友链"><i class="fa fa-links"> </i> <span class="title"> 友链 </span> </a>
+        <a class="logo {% if enslug == 'index' %} active {% endif %}" role="button" data-original-title="个人主页"
+           data-container="div.expanded" href="/"> <b> 文 </b> <i class="fa fa-home"> </i> <span
+                class="title"> 首页  </span> </a>
+        <a {% if enslug== "about" %} class="active" {% endif %} href="/about.html" title="关于"><i
+            class="fa fa-about"> </i> <span class="title"> 关于 </span> </a>
+        <a {% if enslug== "cat" %} class="active" {% endif %} href="/categories.html" title="分类"><i
+            class="fa fa-categories"> </i> <span class="title"> 分类 </span> </a>
+        <a {% if enslug== "archive" %} class="active" {% endif %} href="/archives.html" title="存档"><i
+            class="fa fa-archives"> </i> <span class="title"> 存档 </span> </a>
+        <a {% if enslug== "tag" %} class="active" {% endif %} href="/tags.html" title="标签"><i class="fa fa-tags"> </i>
+        <span class="title"> 标签 </span> </a>
+        <a {% if enslug== "link" %} class="active" {% endif %} href="/links.html" title="友链"><i
+            class="fa fa-links"> </i> <span class="title"> 友链 </span> </a>
     </div>
 </div>
 
@@ -105,73 +140,79 @@
 </div>
 
 <script type="text/javascript">
-    $(function(){
-        $('.btn-like').click(function(e){
+    $(function () {
+        $('.btn-like').click(function (e) {
             e.stopPropagation();
             e.preventDefault();
-            var that = $(this),num = $(this).data('num'), cid = $(this).data('cid'),numEl = that.find('.post-likes-num');
-            if(cid===undefined) return false;
-            $.get(window.action+'likes?cid='+cid).success(function(rs){
-                if(rs.status==1){
-                    if(numEl.length>0){
-                        numEl.text(num+1);
+            var that = $(this), num = $(this).data('num'), cid = $(this).data('cid'), numEl = that.find('.post-likes-num');
+            if (cid === undefined) return false;
+            $.get(window.action + 'likes?cid=' + cid).success(function (rs) {
+                if (rs.status == 1) {
+                    if (numEl.length > 0) {
+                        numEl.text(num + 1);
                     }
-                    testatAlert(rs.msg===undefined ? '已成功为该文章点赞!' : rs.msg);
-                }else{
-                    testatAlert(rs.msg===undefined ? '操作出错!' : rs.msg,'err');
+                    testatAlert(rs.msg === undefined ? '已成功为该文章点赞!' : rs.msg);
+                } else {
+                    testatAlert(rs.msg === undefined ? '操作出错!' : rs.msg, 'err');
                 }
             });
         });
     });
-    function testatAlert(msg,type,time){
+    function testatAlert(msg, type, time) {
         type = type === undefined ? 'success' : 'error';
-        time = time === undefined ? (type=='success' ? 1500 : 3000) : time;
-        var html = '<div class="testat-dialog '+type+'">'+msg+'</div>';
-        $(html).appendTo($('body')).fadeIn(300,function(){
-            setTimeout(function(){
+        time = time === undefined ? (type == 'success' ? 1500 : 3000) : time;
+        var html = '<div class="testat-dialog ' + type + '">' + msg + '</div>';
+        $(html).appendTo($('body')).fadeIn(300, function () {
+            setTimeout(function () {
                 $('body > .testat-dialog').remove();
-            },time);
+            }, time);
         });
     }
-</script><script>
-    $(function(){
-        $('.set-view-mode').click(function(){
+</script>
+<script>
+    $(function () {
+        $('.set-view-mode').click(function () {
             setReadMode($(this).data('mode'));
         });
-        window.onload = function(){
+        window.onload = function () {
             setReadMode();
         };
-        $(window).scroll(function(){
-            if($(this).scrollTop()>180) {
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 180) {
                 $('.fixed-btn .go-top').fadeIn();
-            }else{
+            } else {
                 $('.fixed-btn .go-top').fadeOut();
             }
         });
-        $('.go-top').click(function(){$('html,body').animate({scrollTop: '0px'}, 800);return false;});
-        function setReadMode(mode){
+        $('.go-top').click(function () {
+            $('html,body').animate({scrollTop: '0px'}, 800);
+            return false;
+        });
+        function setReadMode(mode) {
             var btn = $('.set-view-mode');
-            mode = mode===undefined ? getCookie('read-mode') : mode;
-            if(mode=='day'){
+            mode = mode === undefined ? getCookie('read-mode') : mode;
+            if (mode == 'day') {
                 $('body').addClass('night-mode');
-                btn.data('mode','night').find('i').attr('class','fa fa-sun-o');
-            }else{
-                if($('body').hasClass('night-mode')){
+                btn.data('mode', 'night').find('i').attr('class', 'fa fa-sun-o');
+            } else {
+                if ($('body').hasClass('night-mode')) {
                     $('body').removeClass('night-mode');
-                    btn.data('mode','day').find('i').attr('class','fa fa-moon-o');
+                    btn.data('mode', 'day').find('i').attr('class', 'fa fa-moon-o');
                 }
             }
-            setCookie('read-mode',mode);
+            setCookie('read-mode', mode);
         }
-        function setCookie(name,value){
+
+        function setCookie(name, value) {
             var Days = 30;
-            var exp  = new Date();
-            exp.setTime(exp.getTime() + Days*24*60*60*1000);
-            document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+            var exp = new Date();
+            exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+            document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
         }
+
         function getCookie(name) {
-            var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
-            if(arr=document.cookie.match(reg))
+            var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+            if (arr = document.cookie.match(reg))
                 return unescape(arr[2]);
             else
                 return null;
