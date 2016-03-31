@@ -26,23 +26,20 @@ exports.doLogin = function(req, res, next){
     var token = req.query.token;
 
     if(userName == null || password == null){
-        res.redirect('/admin/login.html');
+        res.redirect('/login');
         return;
     }
-    if(token == null || token === '' || token !== '123'){
-        res.redirect('/admin/login.html');
-        return;
-    }
+
     users.getByName(userName, function(err, user){
         if (err){
             throw err;
         }
         if(!user){
-            res.redirect('/admin/login.html');
+            res.redirect('/login');
             return;
         }
         if(!crypto.md5(password.trim()) === user.password){
-            res.redirect('/admin/login.html');
+            res.redirect('/login');
             return;
         }
         req.session.user = user;

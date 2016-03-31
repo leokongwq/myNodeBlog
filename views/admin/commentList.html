@@ -130,8 +130,7 @@
                 <div class="typecho-list-operate clearfix">
                     <form method="get">
                         <div class="operate">
-                            <label><i class="sr-only">全选</i><input type="checkbox"
-                                                                   class="typecho-table-select-all"/></label>
+                            <label><i class="sr-only">全选</i><input type="checkbox" class="typecho-table-select-all"/></label>
                             <div class="btn-group btn-drop">
                                 <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only">操作</i>选中项 <i
                                         class="i-caret-down"></i></button>
@@ -151,13 +150,12 @@
                                 </ul>
                             </div>
                         </div>
-
                         <ul class="typecho-pager">
                             {% if hasPre %}
-                            <li> <a class="next" href="/admin/manage-comments?page={{ crtPage - 1 }}">上一页</a></li>
+                            <li> <a class="next" href="/admin/manage-comments?page={{ crtPage - 1 }}" target="_self">上一页</a></li>
                             {% endif %}
                             {% if hasNext %}
-                                <li> <a class="next" href="/admin/manage-comments?page={{crtPage + 1}}">下一页</a></li>
+                                <li> <a class="next" href="/admin/manage-comments?page={{crtPage + 1}}" target="_self">下一页</a></li>
                             {% endif %}
                         </ul>
                     </form>

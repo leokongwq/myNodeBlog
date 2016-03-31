@@ -10,6 +10,7 @@ var comments = require('../models/comments');
 var users = require('../models/users');
 var postMetaRel = require('../models/postMetaRel');
 var links = require('../models/links');
+var crypto = require('../utils/crypto');
 
 /**
  * 管理后台首页
@@ -211,6 +212,7 @@ function doUpdatePost(toUpdatePost, cb){
  * @param next
  */
 exports.postList = function(req, res, next) {
+    var cmtPageSize = 10;
     var data = {
         user: req.session.user
     };
@@ -269,7 +271,19 @@ exports.postList = function(req, res, next) {
                 pages[i].categorys = postCatesMap[pages[i].id];
             }
             data.pages = pages;
-            res.render('admin/postList', data);
+
+            posts.countAll(function(err, total){
+                if(err){
+                    return next(err);
+                }
+                data.crtPage = pn;
+                data.total = total;
+                data.totalPage = parseInt(total / cmtPageSize) + 1;
+                data.hasNext = (pn * cmtPageSize) < total;
+                data.hasPre = pn > 1 && (pn - 1) * cmtPageSize < total;
+
+                res.render('admin/postList', data);
+            });
         });
     });
 };
@@ -677,6 +691,129 @@ exports.deleteTags = function(req, res, next){
             return next(err);
         }
         res.redirect('/admin/manage-tags');
+    });
+};
+
+/**
+ * 用户列表
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.userList = function(req, res, next){
+    var pageNo = 1;
+    var pageSize = 10;
+    if (req.query.page && util.isNumber(req.query.page)) {
+        pageNo = parseInt(req.query.page);
+    }
+    var cond = {};
+
+    users.countUser(cond, function(err, total){
+        if(err){
+            return next(err);
+        }
+        users.queryUsersPage({}, pageNo, pageSize, function(err, users){
+            if(err){
+                return next(err);
+            }
+            var data = {
+                crtPage : pageNo,
+                total : total,
+                totalPage : parseInt(total / pageSize) + 1,
+                hasNext : (pageNo * pageSize) < total,
+                hasPre : pageNo > 1 && (pageNo - 1) * pageSize < total,
+                users : users
+            };
+            res.render('admin/users', data);
+        });
+    });
+};
+
+/**
+ * 显示创建用户页面
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.createUser = function(req, res, next){
+    var uid = req.query.uid;
+    if(uid && parseInt(uid) > 0){
+        users.getById(uid, function(err, user){
+            if(err){
+                return next(err);
+            }
+            var data = {
+                user : req.session.user,
+                muser : user
+            };
+            res.render('admin/user', data);
+        });
+    }else{
+        res.render('admin/user', { user : req.session.user});
+    }
+};
+
+/**
+ * 创建用户
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.doCreateUpdateUser = function(req, res, next){
+    var  uid = req.body.uid;
+    var name = req.body.name;
+    var password = req.body.password;
+    var mail = req.body.mail;
+    var url  = req.body.url;
+    var nickName = req.body.nickName;
+    var group = req.body.group;
+
+    var user = {
+        name : name,
+        password : password,
+        mail : mail,
+        url : url,
+        nickName : nickName,
+        group : group
+    };
+
+    if(uid && parseInt(uid) >0){//更新
+        user.id = uid;
+        users.updateUser(user, function(err){
+            if(err){
+                return next(err);
+            }
+            res.redirect('/admin/manage-users');
+        });
+    }else{
+        user.password = crypto.md5(user.password);
+        user.created = dateUtil.getNowInt();
+        user.updated = dateUtil.getNowInt();
+        user.lastLogin = dateUtil.getNowInt();
+        user.activated = dateUtil.getNowInt();
+        user.authCode = '';
+        users.createUser(user, function(err, newUser){
+            if(err){
+                return next(err);
+            }
+            res.redirect('/admin/manage-users');
+        });
+    }
+};
+
+/**
+ * 删除用户
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.deleteUsers = function(req, res, next){
+    var uids = req.body.uids;
+    users.batchDelete(uids, function(err){
+        if(err){
+            return next(err);
+        }
+        res.redirect('/admin/manage-users');
     });
 };
 

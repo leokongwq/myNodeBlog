@@ -74,6 +74,11 @@ router.get('/admin/links', auth.adminRequired, admin.links);
 router.post('/admin/link', auth.adminRequired, admin.doSaveUpdateLink);
 router.post('/admin/deleteLinks', auth.adminRequired, admin.deleteLinks);
 
+//用户管理
+router.get('/admin/manage-users', auth.adminRequired, admin.userList);
+router.get('/admin/user', auth.adminRequired, admin.createUser);
+router.post('/admin/user', auth.adminRequired, admin.doCreateUpdateUser);
+router.post('/admin/deleteUsers', auth.adminRequired, admin.deleteUsers);
 
 router.get('/pay/index', syk.index);
 router.get('/wxpay/jsapi/', syk.prePay);

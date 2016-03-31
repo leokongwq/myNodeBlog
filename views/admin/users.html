@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="typecho-page-title">
-    <h2>管理文章<a href="/admin/write-post">新增</a></h2>
+    <h2>管理用户<a href="/admin/user">新增</a></h2>
 </div>
 <div class="row typecho-page-main" role="main">
     <div class="col-mb-12 typecho-list">
@@ -13,79 +13,64 @@
                     <div class="btn-group btn-drop">
                         <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only">操作</i>选中项 <i class="i-caret-down"></i></button>
                         <ul class="dropdown-menu">
-                            <li><a lang="你确认要删除这些文章吗?" href="/admin/delete-post?_=36d1bb387ca3148a70ff3505f609c311">删除</a></li>
+                            <li><a lang="你确认要删除这些用户吗?" href="/admin/deleteUsers">删除</a></li>
                         </ul>
                     </div>
                 </div>
                 <div class="search" role="search">
                     <input type="text" class="text-s" placeholder="请输入关键字" value="" name="keywords" />
-                    <select name="category">
-                        <option value="">所有分类</option>
-                        {% if categorys %}
-                            {% for cate in categorys %}
-                            <option value="{{cate.id}}">{{cate.name}}</option>
-                            {% endfor %}
-                        {% endif %}
-                    </select>
                     <button type="submit" class="btn btn-s">筛选</button>
                 </div>
             </form>
         </div><!-- end .typecho-list-operate -->
 
-        <form method="post" name="manage_posts" class="operate-form">
+        <form method="post" name="manage_users" class="operate-form">
             <div class="typecho-table-wrap">
                 <table class="typecho-list-table">
                     <colgroup>
                         <col width="20"/>
                         <col width="6%"/>
-                        <col width="45%"/>
+                        <col width="30%"/>
                         <col width=""/>
-                        <col width="18%"/>
-                        <col width="16%"/>
+                        <col width="25%"/>
+                        <col width="15%"/>
                     </colgroup>
                     <thead>
                     <tr>
                         <th> </th>
                         <th> </th>
-                        <th>标题</th>
-                        <th>作者</th>
-                        <th>分类</th>
-                        <th>日期</th>
+                        <th>用户名</th>
+                        <th>昵称</th>
+                        <th>电子邮件</th>
+                        <th>用户组</th>
                     </tr>
                     </thead>
                     <tbody>
-                     {% if !pages %}
-                        <tr>
-                            <td colspan="6">
-                                <h6 class="typecho-list-table-title">没有任何文章</h6>
-                            </td>
-                        </tr>
-                     {% endif %}
+                    {% if !users%}
+                    <tr>
+                        <td colspan="6">
+                            <h6 class="typecho-list-table-title">没有用户信息</h6>
+                        </td>
+                    </tr>
+                    {% endif %}
 
-                     {% if pages %}
-                     {% for page in pages %}
-                     <tr id="post-{{page.id}}">
-                         <td><input type="checkbox" value="{{ page.id }}" name="postIds"/></td>
-                         <td><a href="/admin/manage-comments?cid={{ page.id }}" class="balloon-button size-50">{{page.commentsNum}}</a></td>
-                         <td>
-                             <a href="/admin/write-post?pid={{page.id}}">{{ page.title }}</a>
-                             <a href="/posts/{{ page.slug }}.html" title="{{page.title}}"><i class="i-exlink"></i></a>
-                         </td>
-                         <td><a href="/admin/manage-posts?uid={{ page.authorId}}">{{user.nickName}}</a></td>
-                         <td>
-                             {% if page.categorys %}
-                                {% for cate in page.categorys %}
-                                    <a href="/admin/manage-posts?category={{cate.id}}&uid={{page.authorId}}">{{ cate.name }}</a>&nbsp;
-                                {% endfor %}
-                             {% endif %}
-                         </td>
-                         <td>{{page.created}}</td>
-                     </tr>
-                     {% endfor %}
-                     {% endif %}
+                    {% if users%}
+                        {% for user in users %}
+                            <tr id="user-{{ user.id }}">
+                                <td><input type="checkbox" value="{{ user.id }}" name="uids"/></td>
+                                <td><a href="/admin/manage-posts?uid=1" class="balloon-button left size-20">{{ user.id }}</a></td>
+                                <td><a href="/admin/user?uid={{ user.id }}">{{ user.name }}</a>
+                                    <a href="/index/author/{{ user.id }}/" title="浏览{{ user.nickName}}"><i class="i-exlink"></i></a>
+                                </td>
+                                <td>{{ user.nickName }}</td>
+                                <td><a href="mailto:{{ user.mail }}">{{ user.mail }}</a></td>
+                                <td>{{ user.group }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
                     </tbody>
-                </table>
-            </div>
+                </table><!-- end .typecho-list-table -->
+            </div><!-- end .typecho-table-wrap -->
         </form><!-- end .operate-form -->
 
         <div class="typecho-list-operate clearfix">
@@ -95,16 +80,16 @@
                     <div class="btn-group btn-drop">
                         <button class="btn dropdown-toggle btn-s" type="button"><i class="sr-only">操作</i>选中项 <i class="i-caret-down"></i></button>
                         <ul class="dropdown-menu">
-                            <li><a lang="你确认要删除这些文章吗?" href="/admin/delete-post?_=36d1bb387ca3148a70ff3505f609c311">删除</a></li>
+                            <li><a lang="你确认要删除这些用户吗?" href="/admin/deleteUsers">删除</a></li>
                         </ul>
                     </div>
                 </div>
                 <ul class="typecho-pager">
                     {% if hasPre %}
-                    <li> <a class="next" href="/admin/manage-posts?page={{ crtPage - 1 }}">上一页</a></li>
+                    <li> <a class="next" href="/admin/manage-users?page={{ crtPage - 1 }}">上一页</a></li>
                     {% endif %}
                     {% if hasNext %}
-                    <li> <a class="next" href="/admin/manage-posts?page={{crtPage + 1}}">下一页</a></li>
+                    <li> <a class="next" href="/admin/manage-users?page={{crtPage + 1}}">下一页</a></li>
                     {% endif %}
                 </ul>
             </form>
@@ -186,6 +171,7 @@
                 }
             })();
 
+
             // 导航菜单 tab 聚焦时展开下拉菜单
             (function () {
                 $('#typecho-nav-list').find('.parent a').focus(function() {
@@ -204,7 +190,7 @@
 
                     if ((href && href[0] == '#')
                             || /^http\:\/\/www\.leokong\.com\/admin\/.*$/.exec(href)
-                            || /^http\:\/\/www\.leokong\.com\/index\.php\/action\/[_a-zA-Z0-9\/]+.*$/.exec(href)) {
+                            || /^http\:\/\/www\.leokong\.com\/index\\/action\/[_a-zA-Z0-9\/]+.*$/.exec(href)) {
                         return;
                     }
 
