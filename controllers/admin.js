@@ -19,24 +19,46 @@ exports.index = function(req, res) {
     var data = {
         user : req.session.user
     };
-    posts.countAll(function(err, postCount){
-        if(err){
-            throw err;
-        }
-        data.totalPosts = postCount;
+    async.series([function(cb){
         metas.countAllCate(function(err, cateCount){
             if(err){
                 throw err;
             }
             data.totalCate = cateCount;
-            comments.countByUserId(1, false, function(err, totalComment){
-                if(err){
-                    throw err;
-                }
-                data.totalCom = totalComment;
-                res.render('admin/index', data);
-            });
+            cb();
         });
+    },
+    function(cb){
+        comments.countByUserId(req.session.user.id, false, function(err, totalComment){
+            if(err){
+                throw err;
+            }
+            data.totalCom = totalComment;
+            cb();
+        });
+    },
+    function(cb){
+        posts.countAll(function(err, postCount){
+            if(err){
+                throw err;
+            }
+            data.totalPosts = postCount;
+            cb();
+        });
+    },
+    function(cb){
+        posts.queryTopNByDate(10, function(err, posts){
+            if(err){
+                throw err;
+            }
+            posts.forEach(function(post){
+                post.created = dateUtil.unixToDateStr(post.created, 'M.DD');
+            });
+            data.topPosts = posts;
+            cb();
+        });
+    }], function(){
+        res.render('admin/index', data);
     });
 };
 

@@ -42,7 +42,7 @@ exports.doLogin = function(req, res, next){
             res.redirect('/login');
             return;
         }
-        req.session.user = user;
+        req.session.user = user.formatForShow();
         var cookieVal = "name=" + user.name;
         res.cookie('ticket', cookieVal, {maxAge:1000*60*30, signed:true});
         if(req.body.redirectUrl){

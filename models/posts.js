@@ -170,5 +170,14 @@ Post.batchDelete = function (postIds, cb) {
     });
 };
 
+/**
+ *  查询
+ */
+Post.queryTopNByDate = function(topN, cb){
+    Posts.find({}, {limit : topN}, ['created', 'Z'], function(err, posts){
+        cb(err, posts);
+    });
+};
+
 module.exports = Post;
 

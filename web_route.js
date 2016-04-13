@@ -84,5 +84,16 @@ router.get('/pay/index', syk.index);
 router.get('/wxpay/jsapi/', syk.prePay);
 router.get('/wxorder', syk.testPrePayOrder);
 
+//react test
+router.get('/api/comments', function(req, res, next){
+    var comments = [];
+    for(var i = 0; i < 3; i++){
+        comments.push({
+            author : 'leo:' + i,
+            text : "hello cat " + i
+        });
+    }
+    res.json(comments);
+});
 
 module.exports = router;

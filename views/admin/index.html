@@ -10,58 +10,23 @@
 
         <ul id="start-link" class="clearfix">
             <li><a href="/admin/write-post">撰写新文章</a></li>
-            <li><a href="/admin/themes">更换外观</a></li>
-            <li><a href="/admin/plugins">插件管理</a></li>
-            <li><a href="/admin/options-general">系统设置</a></li>
-            <!--<li><a href="/admin/profile">更新我的资料</a></li>-->
+            <li><a href="/admin/profile">更新我的资料</a></li>
         </ul>
     </div>
 
     <div class="col-mb-12 col-tb-4" role="complementary">
         <section class="latest-link">
             <h3>最近发布的文章</h3>
+            {% if topPosts %}
             <ul>
+                {% for post in topPosts %}
                 <li>
-                    <span>3.7</span>
-                    <a href="/index/2016/03/07/30.html" class="title">exports 和 module.exports 的区别</a>
+                    <span>{{ post.created}}</span>
+                    <a href="/posts/{{post.slug}}.html" class="title">{{ post.title }}</a>
                 </li>
-                <li>
-                    <span>2.22</span>
-                    <a href="/index/2016/02/22/29.html" class="title">java 信号量-Semaphore</a>
-                </li>
-                <li>
-                    <span>2.4</span>
-                    <a href="/index/2016/02/04/28.html" class="title">Ngxin错误总结</a>
-                </li>
-                <li>
-                    <span>1.25</span>
-                    <a href="/index/2016/01/25/26.html" class="title">Java读取Classpath文件</a>
-                </li>
-                <li>
-                    <span>1.25</span>
-                    <a href="/index/2016/01/25/25.html" class="title">浏览器缓存知识小结及应用</a>
-                </li>
-                <li>
-                    <span>1.19</span>
-                    <a href="/index/2016/01/19/24.html" class="title">ElasticSearch 安装marvel和license插件</a>
-                </li>
-                <li>
-                    <span>1.18</span>
-                    <a href="/index/2016/01/18/23.html" class="title">mac osx 安装thrift</a>
-                </li>
-                <li>
-                    <span>1.18</span>
-                    <a href="/index/2016/01/18/22.html" class="title">lua-nginx-module 指令详解</a>
-                </li>
-                <li>
-                    <span>1.14</span>
-                    <a href="/index/2016/01/14/21.html" class="title">Nginx Api for Lua 详解</a>
-                </li>
-                <li>
-                    <span>1.12</span>
-                    <a href="/index/2016/01/12/20.html" class="title">nginx 命令行用法</a>
-                </li>
+                {% endfor %}
             </ul>
+            {% endif %}
         </section>
     </div>
 
@@ -136,14 +101,11 @@
             if ($('.typecho-login').length == 0) {
                 $('a').each(function () {
                     var t = $(this), href = t.attr('href');
-
                     if ((href && href[0] == '#')
                             || /^http\:\/\/www\.leokong\.com\/admin\/.*$/.exec(href)
                             || /^http\:\/\/www\.leokong\.com\/index\\/action\/[_a-zA-Z0-9\/]+.*$/.exec(href)) {
                         return;
                     }
-
-                    t.attr('target', '_blank');
                 });
             }
         });

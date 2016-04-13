@@ -20,7 +20,12 @@ var Users = db.define('users', {
     },
     {
         cache: false,
-        methods: {},
+        methods: {
+            formatForShow : function(){
+                this.lastLogin = dateUtil.unixToDateStr(this.lastLogin, "YYYY-MM-DD HH:MM:SS");
+                return this;
+            }
+        },
         hooks: {
             afterLoad: function (next) {
                 this.isAdmin = this.group === 'administrator';
