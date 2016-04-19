@@ -8,7 +8,7 @@ var connStr = config.dbUrl + "?" + optStr;
 //console.log(connStr);
 var db = orm.connect(connStr);
 
-db.on('connect', function (err) {
+db.on('connect', function (err, db) {
     if (err) {
         return logger.error(err);
     }

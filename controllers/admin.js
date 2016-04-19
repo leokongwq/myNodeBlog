@@ -262,11 +262,12 @@ exports.postList = function(req, res, next) {
         async.series([
             //查询文章和分类的对应关系(这里面包含了标签)
             function(callback){
-                postMetaRel.queryPostIdsByMetaId(postIds, function(err, postCateRels){
+                postMetaRel.queryMetaIdsByPostId(postIds, function(err, postCateRels){
                     if(err){
                         return callback(err);
                     }
                     postCatesMap = convertPostMetasToMap(postCateRels);
+                    console.log(postCatesMap);
                     callback();
                 });
             },
@@ -291,6 +292,7 @@ exports.postList = function(req, res, next) {
             }
             for (var i = 0; i < pages.length; i++){
                 pages[i].categorys = postCatesMap[pages[i].id];
+                console.log(pages[i].categorys);
             }
             data.pages = pages;
 
@@ -508,7 +510,6 @@ exports.doCreateMeta = function(req, res, next){
     }
 
     var meta = {
-        id : mid,
         name : name,
         slug : slug,
         parent : parent,
@@ -521,6 +522,7 @@ exports.doCreateMeta = function(req, res, next){
     };
 
     if(mid){ //修改
+        meta.id = mid;
         metas.update(meta, function(err){
             if(err){
                 return next(err);
