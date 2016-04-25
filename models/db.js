@@ -1,4 +1,4 @@
-var config = require('../config');
+var config = require('../config/settings');
 var logger = require('../common/logger');
 var querystring = require('querystring');
 var orm = require('orm');
@@ -6,6 +6,7 @@ var orm = require('orm');
 var optStr = querystring.stringify(config.dbOpt);
 var connStr = config.dbUrl + "?" + optStr;
 //console.log(connStr);
+
 var db = orm.connect(connStr);
 
 db.on('connect', function (err, db) {

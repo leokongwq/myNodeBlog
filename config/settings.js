@@ -9,6 +9,9 @@ var config = {
     description: '一个喜欢折腾技术的小沙弥的技术博客',
     keywords: 'JAVA,分布式,大数据,Linux,缓存,分布式架构,Golang,Nodejs',
 
+    //静态资源文件缓存时间
+    stacticCacheTime : 365 * 24 * 60 * 60,
+
     //session 和 cookie 加密配置
     session_secret : "godisagirl",
     cookie_sign : "php'sthebestlanguageintheworld",
@@ -18,8 +21,9 @@ var config = {
     dbOpt : {
         pool : true,
         showSql  : false,
-        connectTimeout : 50000,
-        debug : true
+        connectTimeout : 6000 * 1000,
+        debug : false,
+        charset : "UTF8"
     },
 
     // redis 配置，默认是本地

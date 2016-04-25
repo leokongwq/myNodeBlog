@@ -3,7 +3,7 @@
  */
 
 var log4js = require('log4js');
-var config = require('../config');
+var config = require('../config/settings');
 var env = process.env.NODE_ENV || "development";
 
 log4js.configure({

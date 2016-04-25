@@ -76,7 +76,7 @@ exports.about= function(req, res, next){
  * @param req
  * @param res
  */
-exports.categories = function(req, res){
+exports.categories = function(req, res, next){
     var data = {
         slug : '分类',
         enslug : 'category',
@@ -86,7 +86,6 @@ exports.categories = function(req, res){
         if(err){
             return next(err);
         }
-
         async.each(categorys, function(category, callback){
             //查询每个分类下的文章
             postMetaRel.queryPostIdsByMetaId(category.id, function(err, postMetaRels){
