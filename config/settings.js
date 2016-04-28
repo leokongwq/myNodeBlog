@@ -21,7 +21,7 @@ var config = {
     dbOpt : {
         pool : true,
         showSql  : false,
-        connectTimeout : 6000 * 1000,
+        connectTimeout : 6000 * 100000,
         debug : false,
         charset : "UTF8"
     },

@@ -183,17 +183,22 @@ exports.doWritePost = function(req, res, next){
  */
 function doSaveNewPost(toSave, cb){
     //保存文章
+    var category = toSave.category;
+    var tags = toSave.tags;
     posts.create(toSave, function(err, newPost){
         if (err){
             return cb(err);
         }
-        var toSaveRels = buildToSavePostRel(toSave);
-        if (toSaveRels.length > 0) {
-            postMetaRel.createRels(toSaveRels, function (err, results) {
-                return cb(err);
-            });
+        //toSave 会被修改,
+        newPost.category = category;
+        newPost.tags = tags;
+        var toSaveRels = buildToSavePostRel(newPost);
+        if(toSaveRels.length <= 0){
+            return cb();
         }
-        cb();
+        postMetaRel.createRels(toSaveRels, function (err, results) {
+            return cb(err);
+        });
     });
 }
 
@@ -203,7 +208,6 @@ function doSaveNewPost(toSave, cb){
  * @param cb
  */
 function doUpdatePost(toUpdatePost, cb){
-    console.log("do update");
     //修改文章内容
     posts.update(toUpdatePost, function(err){
         if(err){
@@ -215,13 +219,12 @@ function doUpdatePost(toUpdatePost, cb){
                 return cb(err);
             }
             var toSaveRels = buildToSavePostRel(toUpdatePost);
-            if (toSaveRels.length > 0) {
-                postMetaRel.createRels(toSaveRels, function (err, results) {
-                    return cb(err);
-                });
-            }else {
-                cb();
+            if (toSaveRels.length <=  0) {
+                return cb();
             }
+            postMetaRel.createRels(toSaveRels, function (err, results) {
+                return cb(err);
+            });
         });
     });
 }
@@ -267,7 +270,6 @@ exports.postList = function(req, res, next) {
                         return callback(err);
                     }
                     postCatesMap = convertPostMetasToMap(postCateRels);
-                    console.log(postCatesMap);
                     callback();
                 });
             },
@@ -292,7 +294,6 @@ exports.postList = function(req, res, next) {
             }
             for (var i = 0; i < pages.length; i++){
                 pages[i].categorys = postCatesMap[pages[i].id];
-                console.log(pages[i].categorys);
             }
             data.pages = pages;
 
@@ -887,8 +888,6 @@ function bulidPost(req){
 function buildToSavePostRel(toSave){
     var cates = toSave.category;
     var tags = toSave.tags;
-    console.log(cates);
-    console.log(tags);
     var toSaveRels = [];
     //保存文章对应的分类
     if(cates && cates.length > 0) {
